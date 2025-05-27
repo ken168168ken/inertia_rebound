@@ -53,4 +53,4 @@ def rebound(
             '成功次數': win_cnt,
             '資料筆數': len(df)
         }
-    return JSONResponse(content=result, ensure_ascii=False)
+    return JSONResponse(content=result)
