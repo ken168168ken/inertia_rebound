@@ -1,4 +1,3 @@
-# app.py
 from fastapi import FastAPI, Query
 from fastapi.responses import JSONResponse
 import yfinance as yf
@@ -28,11 +27,17 @@ def rebound(
             df[ma_col] = df['Close'].rolling(window=ma).mean()
             rc, wc = 0, 0
             for i in range(ma, len(df)-5):
-                # 當日首次碰觸均線
-                if (df['Close'].iloc[i-1] > df[ma_col].iloc[i-1]) and (df['Close'].iloc[i] <= df[ma_col].iloc[i]):
+                prev_close = float(df['Close'].iloc[i-1])
+                prev_ma = float(df[ma_col].iloc[i-1])
+                this_close = float(df['Close'].iloc[i])
+                this_ma = float(df[ma_col].iloc[i])
+                # 跳過NaN
+                if any(pd.isna([prev_close, prev_ma, this_close, this_ma])):
+                    continue
+                if (prev_close > prev_ma) and (this_close <= this_ma):
                     rc += 1
                     future_close = df['Close'].iloc[i+1:i+6]
-                    base = df['Close'].iloc[i]
+                    base = this_close
                     if (future_close > base*1.03).any():
                         wc += 1
             if rc > 0 and wc/rc > best_rate:
