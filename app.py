@@ -18,7 +18,7 @@ def rebound(
         start = end - timedelta(days=365*years)
         df = yf.download(symbol, start=start.strftime('%Y-%m-%d'), end=end.strftime('%Y-%m-%d'), interval=interval)
         if df.empty or len(df) < 50:
-            result[label] = {'error': 'No data found or not enough data'}
+            result[label] = {'錯誤': '查無資料或資料筆數不足', '資料筆數': len(df)}
             continue
         ma_list = [5,10,13,20,30,60,120,240]
         best_ma, best_rate, rebound_cnt, win_cnt = None, 0, 0, 0
@@ -32,14 +32,12 @@ def rebound(
                     prev_ma = df[ma_col].iloc[i-1]
                     this_close = df['Close'].iloc[i]
                     this_ma = df[ma_col].iloc[i]
-                    # 跳過NaN或不可比較的情況
                     if pd.isna(prev_close) or pd.isna(prev_ma) or pd.isna(this_close) or pd.isna(this_ma):
                         continue
                     if (prev_close > prev_ma) and (this_close <= this_ma):
                         rc += 1
                         future_close = df['Close'].iloc[i+1:i+6]
                         base = this_close
-                        # 跳過future_close全是NaN的狀況
                         if pd.isna(base) or future_close.isna().all():
                             continue
                         if (future_close > base*1.03).any():
@@ -52,6 +50,7 @@ def rebound(
             '最佳均線': best_ma,
             '勝率': f"{best_rate*100:.1f}%",
             '回調次數': rebound_cnt,
-            '成功次數': win_cnt
+            '成功次數': win_cnt,
+            '資料筆數': len(df)
         }
-    return JSONResponse(content=result)
+    return JSONResponse(content=result, ensure_ascii=False)
