@@ -11,7 +11,7 @@ def rebound(
     symbol: str = Query('TSLA', description="股票代碼，例如TSLA"),
     years: int = 5
 ):
-    interval_map = {'日K':'1d', '週K':'1wk', '月K':'1mo'}
+    interval_map = {'day':'1d', 'week':'1wk', 'month':'1mo'}
     result = {}
     for label, interval in interval_map.items():
         end = datetime.today()
