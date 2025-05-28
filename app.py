@@ -18,7 +18,7 @@ def rebound(
         start = end - timedelta(days=365*years)
         df = yf.download(symbol, start=start.strftime('%Y-%m-%d'), end=end.strftime('%Y-%m-%d'), interval=interval)
         if df.empty or len(df) < 50:
-            result[label] = {'錯誤': '查無資料或資料筆數不足', '資料筆數': len(df)}
+            result[label] = {'error': 'No data found or not enough data', 'rows': len(df)}
             continue
         ma_list = [5,10,13,20,30,60,120,240]
         best_ma, best_rate, rebound_cnt, win_cnt = None, 0, 0, 0
@@ -47,10 +47,10 @@ def rebound(
             if rc > 0 and wc/rc > best_rate:
                 best_ma, best_rate, rebound_cnt, win_cnt = ma, wc/rc, rc, wc
         result[label] = {
-            '最佳均線': best_ma,
-            '勝率': f"{best_rate*100:.1f}%",
-            '回調次數': rebound_cnt,
-            '成功次數': win_cnt,
-            '資料筆數': len(df)
+            'best_ma': best_ma,
+            'winrate': f"{best_rate*100:.1f}%",
+            'touch_count': rebound_cnt,
+            'win_count': win_cnt,
+            'rows': len(df)
         }
     return JSONResponse(content=result)
