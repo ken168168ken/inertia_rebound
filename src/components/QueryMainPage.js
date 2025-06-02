@@ -67,7 +67,7 @@ export default function QueryMainPage() {
         <div className="site-logo">
           {/* 如果你是放到 public/logo.jpg，就用 /logo.jpg */}
           <img
-            src="/logo.jpg"
+            src="https://github.com/ken168168ken/inertia_rebound/blob/main/public/assets/logo.jpg?raw=true"
             alt="K技術分析站"
             className="h-10 inline-block mr-2"
           />
