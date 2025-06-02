@@ -1,14 +1,7 @@
-// src/index.js
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';                      // 引入 Tailwind 及自定義 CSS
-import QueryMainPage from './components/QueryMainPage';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./index.css"; // 确保 Tailwind / 全局样式都在这里被引入
 
-// React 18+ 的寫法
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    {/* 這裡先給 username="KenLee"，之後可接登入系統動態替換 */}
-    <QueryMainPage username="KenLee" />
-  </React.StrictMode>
-);
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App />);
