@@ -1,3 +1,4 @@
+# backend/main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -5,7 +6,7 @@ import yfinance as yf
 
 app = FastAPI()
 
-# 加上 CORS middleware，允許任何網域呼叫這個 API
+# 允許所有網域呼叫 API
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -24,14 +25,14 @@ async def analyze(req: AnalyzeRequest):
     try:
         data = yf.download(req.symbol, period="5d", interval="1d")
         closes_obj = data["Close"]
+        # 確保拿到的是 Series 而非 DataFrame
         if not hasattr(closes_obj, "tolist"):
             closes_series = closes_obj.iloc[:, 0]
         else:
             closes_series = closes_obj
         closes = closes_series.tolist()
 
-        dates_index = data.index
-        dates = dates_index.strftime("%Y-%m-%d").tolist()
+        dates = data.index.strftime("%Y-%m-%d").tolist()
 
         return {
             "symbol": req.symbol,
@@ -41,7 +42,4 @@ async def analyze(req: AnalyzeRequest):
             "params": req.params
         }
     except Exception as e:
-        return {
-            "error": True,
-            "message": str(e)
-        }
+        return {"error": True, "message": str(e)}
