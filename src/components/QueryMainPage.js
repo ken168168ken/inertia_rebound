@@ -1,9 +1,8 @@
+// src/components/QueryMainPage.js
 import React, { useState } from 'react';
 
-// 假設 logo 圖片已放在 public/assets/logo.png
-// 使用 Tailwind CSS 做響應式設計
-
 export default function QueryMainPage({ username }) {
+  // 可用的技術指標列表
   const indicatorList = [
     { key: 'SMA', label: '均線 (SMA)' },
     { key: 'MACD', label: 'MACD' },
@@ -13,6 +12,7 @@ export default function QueryMainPage({ username }) {
     { key: 'M', label: 'M 頭' }
   ];
 
+  // 每個指標的預設參數
   const defaultParams = {
     SMA: { short: 5, long: 20 },
     MACD: { fast: 12, slow: 26, signal: 9 },
@@ -22,10 +22,12 @@ export default function QueryMainPage({ username }) {
     M: { lookback: 30 }
   };
 
+  // React 內部狀態：股號、選中指標、對應參數
   const [stockCode, setStockCode] = useState('');
   const [selectedIndicators, setSelectedIndicators] = useState([]);
   const [params, setParams] = useState(defaultParams);
 
+  // 切換指標是否被選中
   const toggleIndicator = (key) => {
     setSelectedIndicators((prev) =>
       prev.includes(key)
@@ -34,6 +36,7 @@ export default function QueryMainPage({ username }) {
     );
   };
 
+  // 當使用者改參數欄位時更新狀態
   const handleParamChange = (indicatorKey, field, value) => {
     setParams((prev) => ({
       ...prev,
@@ -44,9 +47,10 @@ export default function QueryMainPage({ username }) {
     }));
   };
 
+  // 按下「查詢」按鈕的事件（目前只是印到 console，後面要串後端）
   const handleQuery = () => {
-    // 呼叫 API 拉取股價與指標計算結果
     console.log('查詢', stockCode, selectedIndicators, params);
+    // TODO: 這邊改為呼叫後端 API，然後把結果畫到圖表區
   };
 
   return (
@@ -54,7 +58,11 @@ export default function QueryMainPage({ username }) {
       {/* Header */}
       <header className="flex items-center justify-between mb-6">
         <div className="flex items-center">
-          <img src="/assets/logo.png" alt="Logo" className="h-10 w-10 rounded-full" />
+          <img
+            src="/assets/logo.jpg"
+            alt="Logo"
+            className="h-10 w-10 rounded-full"
+          />
           <h1 className="ml-3 text-xl font-semibold text-gray-800">K技術分析站</h1>
         </div>
         <div className="text-gray-600">登入者：{username}</div>
@@ -100,22 +108,35 @@ export default function QueryMainPage({ username }) {
         {/* 參數設定區 */}
         <div>
           {selectedIndicators.map((indicatorKey) => (
-            <div key={indicatorKey} className="mb-4 border border-gray-200 rounded p-4 bg-gray-50">
+            <div
+              key={indicatorKey}
+              className="mb-4 border border-gray-200 rounded p-4 bg-gray-50"
+            >
               <h3 className="text-gray-700 font-medium mb-2">
                 {indicatorList.find((item) => item.key === indicatorKey).label} 參數
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {Object.entries(defaultParams[indicatorKey]).map(([field, defaultValue]) => (
-                  <div key={field} className="flex flex-col">
-                    <label className="text-gray-600 mb-1 capitalize">{field}</label>
-                    <input
-                      type="number"
-                      value={params[indicatorKey][field]}
-                      onChange={(e) => handleParamChange(indicatorKey, field, Number(e.target.value))}
-                      className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-300"
-                    />
-                  </div>
-                ))}
+                {Object.entries(defaultParams[indicatorKey]).map(
+                  ([field, defaultValue]) => (
+                    <div key={field} className="flex flex-col">
+                      <label className="text-gray-600 mb-1 capitalize">
+                        {field}
+                      </label>
+                      <input
+                        type="number"
+                        value={params[indicatorKey][field]}
+                        onChange={(e) =>
+                          handleParamChange(
+                            indicatorKey,
+                            field,
+                            Number(e.target.value)
+                          )
+                        }
+                        className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                      />
+                    </div>
+                  )
+                )}
               </div>
             </div>
           ))}
@@ -123,7 +144,9 @@ export default function QueryMainPage({ username }) {
 
         {/* 圖表與結果區（Placeholder） */}
         <div className="mt-8">
-          <h2 className="text-gray-700 font-medium mb-2">K 線圖與分析結果</h2>
+          <h2 className="text-gray-700 font-medium mb-2">
+            K 線圖與分析結果
+          </h2>
           <div className="h-96 bg-white border border-gray-200 rounded shadow-inner flex items-center justify-center text-gray-400">
             圖表區 / 分析結果區 (開發中...)
           </div>
