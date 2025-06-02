@@ -1,3 +1,5 @@
+// src/components/QueryMainPage.js
+
 import React, { useState } from "react";
 import {
   ResponsiveContainer,
@@ -10,7 +12,8 @@ import {
   Legend
 } from "recharts";
 
-export default function QueryMainPage({ username }) {
+export default function QueryMainPage() {
+  // 股票代号、指标、参数、图表数据、loading 状态
   const [stockCode, setStockCode] = useState("TSLA");
   const [selectedIndicators, setSelectedIndicators] = useState(["SMA", "MACD"]);
   const [params, setParams] = useState({
@@ -20,10 +23,10 @@ export default function QueryMainPage({ username }) {
   const [chartData, setChartData] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // 查詢事件
   const handleQuery = async () => {
     setLoading(true);
     try {
+      // 这里写后端 API 的完整 URL
       const response = await fetch(
         "https://inertia-rebound-backend.onrender.com/api/analyze",
         {
@@ -36,6 +39,8 @@ export default function QueryMainPage({ username }) {
           })
         }
       );
+
+      // 如果网络层就挂了，会被 catch
       const result = await response.json();
       if (result.error) {
         alert("查詢失敗：" + result.message);
@@ -49,13 +54,14 @@ export default function QueryMainPage({ username }) {
         setChartData(data);
       }
     } catch (e) {
-      alert("API 錯誤：" + e.message);
+      alert("API 錯誤：Load failed 或 無法連線"); // 这里区分不了具体原因，就统一提示
+      setChartData(null);
     }
     setLoading(false);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
+    <div className="p-4 md:p-8">
       <div className="flex flex-col md:flex-row md:items-center md:space-x-4 mb-6">
         <input
           type="text"
@@ -72,6 +78,7 @@ export default function QueryMainPage({ username }) {
           {loading ? "查詢中..." : "查詢"}
         </button>
       </div>
+
       <div className="mt-8">
         <h2 className="text-gray-700 font-medium mb-2">K 線圖與分析結果</h2>
         {chartData ? (
