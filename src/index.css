@@ -1,5 +1,15 @@
+/* src/index.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* 你可以在这里再加一些自定义全局样式 */
+/* 自訂 Logo 區塊的 margin/padding、字型大小 */
+.site-header {
+  @apply bg-white shadow p-4 flex items-center justify-between;
+}
+.site-logo {
+  @apply text-2xl font-bold text-indigo-600;
+}
+.user-name {
+  @apply text-gray-700;
+}
