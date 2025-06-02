@@ -1,12 +1,5 @@
-/* src/index.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* 以下可寫一些全域 CSS */
-html, body, #root {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  font-family: 'Noto Sans TC', sans-serif;
-}
+/* 你可以在这里再加一些自定义全局样式 */
